@@ -1,0 +1,9 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+# VER https://www.w3schools.com/git/git_ignore.asp?remote=github
+
+
+.angular/
+node_modules/
+.mvn/
+target/
+
