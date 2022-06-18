@@ -24,12 +24,12 @@ CREATE TABLE IF NOT EXISTS `user` (
 INSERT INTO
     `user` (`id`, `email`, `name`)
 VALUES
-    (1, ' uno @gmail.com ', ' Uno '),
-    (2, ' dos @gmail.com ', ' Dos '),
-    (3, ' other @gmail.com ', ' Other '),
-    (4, ' some @gmail.com ', ' Some '),
-    (5, ' first @gmail.com ', ' First '),
-    (6, ' primero @gmail.com ', ' Primero '),
-    (7, ' segundo @gmail.com ', ' Segundo '),
-    (8, ' tercero @gmail.com ', ' Tercero '),
-    (9, ' cuarto @gmail.com ', ' Cuarto ');
+    (1, 'uno@gmail.com', 'Uno'),
+    (2, 'dos@gmail.com', 'Dos'),
+    (3, 'other@gmail.com', 'Other'),
+    (4, 'some@gmail.com', 'Some'),
+    (5, 'first@gmail.com', 'First'),
+    (6, 'primero@gmail.com', 'Primero'),
+    (7, 'segundo@gmail.com', 'Segundo'),
+    (8, 'tercero@gmail.com', 'Tercero'),
+    (9, 'cuarto@gmail.com', 'Cuarto');
