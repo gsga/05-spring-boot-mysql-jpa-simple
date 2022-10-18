@@ -14,6 +14,8 @@
  */
 package tup.simple.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -98,7 +100,44 @@ public class UserController {
      * https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html#findById-ID-
      * Optional<T> findById(ID id)
      */
-    return userRepository.findById(id).toString();
+    String resp = """
+          <style>
+            #users {"
+              font-family: Arial, Helvetica, sans-serif;
+              border-collapse: collapse;
+              width: 100%;
+            }
+            #users td, #users th {
+              border: 1px solid #ddd;
+              padding: 8px;
+            }
+            #users tr:nth-child(even){background-color: #f2f2f2;}
+            #users tr:hover {background-color: #ddd;}
+            #users th {
+              padding-top: 12px;
+              padding-bottom: 12px;
+              text-align: left;
+              background-color: #04AA6D;
+              color: white;
+            }
+          </style>
+          <table id ='users'>
+            <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Email</th>
+            </tr>
+        """;
+    // Optional<User> user = userRepository.findById(id);
+
+    resp += "<tr>"
+        + "<td>" + "13" + "</td>"
+        + "<td>" + "José" + "</td>"
+        + "<td>" + "a@gmai." + "</td>"
+        + "</tr>";
+
+    return resp + "</table>";
+
   }
 
   @GetMapping("/all")
@@ -106,8 +145,8 @@ public class UserController {
     // This returns a JSON or XML with the users
     Iterable<User> iterable = userRepository.findAll();
     /**
-     * Lo que viene a continuación se llama text block, 
-     * y es tipo String. El Manual de Java los describe en 
+     * Lo que viene a continuación se llama text block,
+     * y es tipo String. El Manual de Java los describe en
      * la sección 3.10.6 Text Blocks.
      * 
      * La variable resp es de tipo String, y le vamos a asignar un bloque de texto.
@@ -157,13 +196,13 @@ public class UserController {
               <th>Email</th>
             </tr>
         """;
-        /**
-         * Ya terminé con la fila de los encabezados, y ahora tengo que
-         * generar el cuerpo de la tabla, una fila por cada registro.
-         * No puedo usar forEach() con una función lambda
-         * porque el scope de las variables no lo permite.
-         * Por eso uso el for mejorado, para recorrer el objeto iterable.
-         */
+    /**
+     * Ya terminé con la fila de los encabezados, y ahora tengo que
+     * generar el cuerpo de la tabla, una fila por cada registro.
+     * No puedo usar forEach() con una función lambda
+     * porque el scope de las variables no lo permite.
+     * Por eso uso el for mejorado, para recorrer el objeto iterable.
+     */
     for (User user : iterable) {
       resp += "<tr>"
           + "<td>" + user.getId() + "</td>"

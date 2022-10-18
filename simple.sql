@@ -2,11 +2,11 @@ DROP DATABASE IF EXISTS `simple`;
 
 CREATE DATABASE IF NOT EXISTS `simple` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
-DROP USER `springuser` @`%`;
+DROP USER 'springuser' @' % ';
 
-CREATE USER `springuser` @`%` IDENTIFIED BY 'ThePassword';
+CREATE USER `springuser` @` % ` IDENTIFIED BY 'ThePassword';
 
-GRANT USAGE ON *.* TO `springuser` @`%`;
+GRANT USAGE ON *.* TO `springuser` @` % `;
 
 GRANT ALL PRIVILEGES ON `simple`.* TO ' springuser ' @' % ';
 
