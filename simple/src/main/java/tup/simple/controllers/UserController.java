@@ -14,8 +14,6 @@
  */
 package tup.simple.controllers;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -99,10 +97,14 @@ public class UserController {
     /**
      * https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html#findById-ID-
      * Optional<T> findById(ID id)
+     * 
+     * Dentro del estilo, el selector #users indica que el estilo
+     * que estamos definiendo es para ser usado solamente en el
+     * elemento del DOM que tiene id='users', o sea la tabla.
      */
     String resp = """
           <style>
-            #users {"
+            #users {
               font-family: Arial, Helvetica, sans-serif;
               border-collapse: collapse;
               width: 100%;
@@ -121,23 +123,46 @@ public class UserController {
               color: white;
             }
           </style>
-          <table id ='users'>
+          <table id='users'>
             <tr>
               <th>Id</th>
               <th>Name</th>
               <th>Email</th>
             </tr>
         """;
-    // Optional<User> user = userRepository.findById(id);
+    /**
+     * https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html
+     * El método findById() tiene un tipo de retorno Optional.
+     * Dicho brevemente, significa que el objeto retornado puede estar
+     * presente, o no estar presente. O está, o no está. Solo hay dos opciones.
+     * Si está, lo puedo extraer con el método get(). En este caso, el get()
+     * me devuelve simplemente el objeto de tipo User, con sus campos
+     * debidamente completados con los valores que JPA sacó de la tabla
+     * correspondiente
+     * de la base de datos.
+     */
+    if (userRepository.findById(id).isPresent()) {
+      /**
+       * No necesito el operador new. Solo lo uso cuando quiero crear una
+       * instancia que todavía no existe, por eso es 'nueva'. En este caso,
+       * el objeto user ya existe, y me viene retornado por el método get().
+       * No necesito crearlo, solo se lo asigno a la variable.
+       */
+      User user = userRepository.findById(id).get();
+      resp += "<tr>"
+          + "<td>" + user.getId() + "</td>"
+          + "<td>" + user.getName() + "</td>"
+          + "<td>" + user.getEmail() + "</td>"
+          + "</tr>";
+    } else {
+      resp += "<tr>"
+          + "<td>" + "-" + "</td>"
+          + "<td>" + "-" + "</td>"
+          + "<td>" + "-" + "</td>"
+          + "</tr>";
 
-    resp += "<tr>"
-        + "<td>" + "13" + "</td>"
-        + "<td>" + "José" + "</td>"
-        + "<td>" + "a@gmai." + "</td>"
-        + "</tr>";
-
+    }
     return resp + "</table>";
-
   }
 
   @GetMapping("/all")
@@ -152,9 +177,9 @@ public class UserController {
      * La variable resp es de tipo String, y le vamos a asignar un bloque de texto.
      * Ese bloque de texto es todo que lo que está contenido entre los dos
      * delimitadores: el de apertura y el de cierre.
-     * El delimitador de apertura es la triple comilla """ que está a la
+     * El delimitador de apertura es la triple comilla ' """ ' que está a la
      * derecha del igual.
-     * El delimitador de cierre es la triple comilla """ que está al final.
+     * El delimitador de cierre es la triple comilla ' """ ' que está al final.
      * Todo es seguido por el punto y coma, porque es el final de una sentencia.
      * 
      * No es buen estilo incluir cadenas largas en un archivo de código fuente.
@@ -167,10 +192,14 @@ public class UserController {
      * tabla misma. Lo primero que hacemos es generar una fila y en las
      * celdas de esa fila poner los encabezados, que son los nombres de
      * las columnas o campos de la tabla que está en la base de datos.
+     * 
+     * Dentro del estilo, el selector #users indica que el estilo
+     * que estamos definiendo es para ser usado solamente en el
+     * elemento del DOM que tiene id='users', o sea la tabla.
      */
     String resp = """
           <style>
-            #users {"
+            #users {
               font-family: Arial, Helvetica, sans-serif;
               border-collapse: collapse;
               width: 100%;
@@ -189,7 +218,7 @@ public class UserController {
               color: white;
             }
           </style>
-          <table id ='users'>
+          <table id='users'>
             <tr>
               <th>Id</th>
               <th>Name</th>
