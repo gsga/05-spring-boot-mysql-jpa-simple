@@ -1,15 +1,15 @@
 /**
- * Esta clase UserController pertenece al paquete controllers.
+ * Esta clase 'UserController' pertenece al paquete 'controllers'.
  * En principio, solo debería atender a los requests HTTP,
  * y según sea GET, POST, u otro método, analizar el contenido
  * del request, y decidir a qué método llamar. 
  * En principio, esta clase no debería hacer el trabajo. No.
  * Lo que debería hacer es llamar al método encargado de hacer
  * el trabajo y pasarle los parámetros necesarios. 
- * Ese método llamado debería pertenecer a una clase del paquete services. 
+ * Ese otro método llamado debería pertenecer a una clase del paquete 'services'. 
  * Pero nosotros no tenemos ese paquete, porque este es un ejemplo muy simple.
- * Veremos que esta clase hace el trabajo, lo que no debería ser así.
- * Entonces, recordar que estamos dejando de lado un principio
+ * Veremos que esta clase 'UserController' hace todo el trabajo, lo que no debería ser así.
+ * Entonces, tenemos que recordar que estamos dejando de lado un principio
  * muy importante, para no complicar este ejemplo.
  */
 package tup.simple.controllers;
@@ -34,8 +34,8 @@ import tup.simple.repositories.UserRepository;
  * el nombre de una vista.
  */
 @RestController
-// La URL que vaya en la anotación habrá que agregarla detrás del puerto 8080
-// en todas las llamadas a esta aplicación.
+// La URL que va entre paréntesis en esta anotación habrá que agregarla detrás
+// del puerto 8080 en todas las llamadas a esta aplicación.
 // Por ejemplo @RequestMapping("/user") resultaría en lo siguiente:
 // localhost:8080/user.... y detrás de esto habría que agregar el
 // resto de la URL.
@@ -52,84 +52,58 @@ public class UserController {
    * - Implementa la interfaz Serializable.
    * Eso es todo. Es solo una convención.
    * 
-   * La anotación @Autowired significa que Spring va a inyectar en esta clase un
-   * bean
-   * llamado userRepository.
-   * No hay en este proyecto una clase UserRepository. Solo hay una
-   * interfaz UserRepository. Y esta interfaz lo único que hace es extender
-   * CrudRepository. No declara ni campos ni métodos. Nosotros no hacemos nada,
+   * La anotación '@Autowired' significa que Spring va a inyectar en esta clase un
+   * bean llamado 'userRepository' de tipo 'UserRepository'.
+   * No hay en este proyecto una clase 'UserRepository'. Solo hay una
+   * interfaz 'UserRepository'. Y esta interfaz lo único que hace es extender
+   * 'CrudRepository'. No declara ni campos ni métodos. Nosotros no hacemos nada,
    * todo lo hace Spring por nosotros.
    * Esta es la inyección de dependencia. Nosotros lo único que hacemos es
-   * declarar la variable userRepository de tipo UserRepository, y ponerle
-   * la anotación Autowired. Y listo. Ya tenemos en esta clase UserController
-   * la variable userRepository correctamente configurada e inicializada, de
+   * declarar la variable 'userRepository' de tipo 'UserRepository', y ponerle
+   * la anotación '@Autowired'. Y listo. Ya tenemos en esta clase 'UserController'
+   * la variable 'userRepository' correctamente configurada e inicializada, de
    * manera que la podemos usar sin más.
-   * Notar que tampoco hemos programado los métodos que estamos llamando. Esos
-   * métodos fueron generados automáticamente por la anotación Data de Lombok,
-   * que pusimos en la clase User.
+   * Notar que tampoco hemos programado los métodos que estamos llamando,
+   * y que están declarados en la interfaz 'CrudRepository'.
+   * Los nombres de los métodos que nosotros creamos en esta clase
+   * son arbitrarios. Pero los nombres de los métodos que invocamos
+   * sobre el objeto 'userRepository' tienen que ser los de la interfaz.
    */
   @Autowired
   private UserRepository userRepository;
 
   @PostMapping("/add") // Map ONLY POST Requests
+  // @RequestParam means it is a parameter from the GET or POST request
   public String addNewUser(@RequestParam String name, @RequestParam String email) {
-    // @RequestParam means it is a parameter from the GET or POST request
 
-    User n = new User();
-    n.setName(name);
-    n.setEmail(email);
-    userRepository.save(n);
-    return "Saved";
+    User user = new User();
+    user.setName(name);
+    user.setEmail(email);
+    userRepository.save(user);
+    return "Se grabó el nuevo user.";
   }
 
   @PostMapping("/delete/{id}") // Map ONLY POST Requests
+  /**
+   * https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/PathVariable.html
+   * 
+   * @PathVariable significa que el parámetro 'id' está ligado a una variable de
+   *               template del URI
+   */
   public String deleteUserById(@PathVariable Long id) {
-    // @RequestParam means it is a parameter from the GET or POST request
-
     userRepository.deleteById(id);
     return "Deleted";
   }
 
   @GetMapping("/{id}")
   public String findUserById(@PathVariable Long id) {
-    // @PathVariable indica que el parámetro id, de tipo Long, es una
-    // variable que viene en la URI.
+    // @PathVariable indica que el parámetro 'id', de tipo Long, es una
+    // variable de template que viene en la URI.
     /**
      * https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html#findById-ID-
      * Optional<T> findById(ID id)
-     * 
-     * Dentro del estilo, el selector #users indica que el estilo
-     * que estamos definiendo es para ser usado solamente en el
-     * elemento del DOM que tiene id='users', o sea la tabla.
      */
-    String resp = """
-          <style>
-            #users {
-              font-family: Arial, Helvetica, sans-serif;
-              border-collapse: collapse;
-              width: 100%;
-            }
-            #users td, #users th {
-              border: 1px solid #ddd;
-              padding: 8px;
-            }
-            #users tr:nth-child(even){background-color: #f2f2f2;}
-            #users tr:hover {background-color: #ddd;}
-            #users th {
-              padding-top: 12px;
-              padding-bottom: 12px;
-              text-align: left;
-              background-color: #04AA6D;
-              color: white;
-            }
-          </style>
-          <table id='users'>
-            <tr>
-              <th>Id</th>
-              <th>Name</th>
-              <th>Email</th>
-            </tr>
-        """;
+    String resp = primeraParte();
     /**
      * https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html
      * El método findById() tiene un tipo de retorno Optional.
@@ -138,8 +112,7 @@ public class UserController {
      * Si está, lo puedo extraer con el método get(). En este caso, el get()
      * me devuelve simplemente el objeto de tipo User, con sus campos
      * debidamente completados con los valores que JPA sacó de la tabla
-     * correspondiente
-     * de la base de datos.
+     * correspondiente de la base de datos.
      */
     if (userRepository.findById(id).isPresent()) {
       /**
@@ -149,6 +122,7 @@ public class UserController {
        * No necesito crearlo, solo se lo asigno a la variable.
        */
       User user = userRepository.findById(id).get();
+
       resp += "<tr>"
           + "<td>" + user.getId() + "</td>"
           + "<td>" + user.getName() + "</td>"
@@ -169,16 +143,39 @@ public class UserController {
   public String getAllUsers() {
     // This returns a JSON or XML with the users
     Iterable<User> iterable = userRepository.findAll();
+    String resp = primeraParte();
+    /**
+     * Ya terminé con la fila de los encabezados, y ahora tengo que
+     * generar el cuerpo de la tabla, una fila por cada registro.
+     * No puedo usar forEach() con una función lambda
+     * porque el scope de las variables no lo permite.
+     * Por eso uso el for mejorado, para recorrer el objeto iterable.
+     */
+    for (User user : iterable) {
+      resp += "<tr>"
+          + "<td>" + user.getId() + "</td>"
+          + "<td>" + user.getName() + "</td>"
+          + "<td>" + user.getEmail() + "</td>"
+          + "</tr>";
+    }
+    return resp + "</table>";
+  }
+
+  @GetMapping("")
+  public String hola() {
+    return "Hola";
+  }
+
+  private String primeraParte() {
     /**
      * Lo que viene a continuación se llama text block,
      * y es tipo String. El Manual de Java los describe en
      * la sección 3.10.6 Text Blocks.
      * 
-     * La variable resp es de tipo String, y le vamos a asignar un bloque de texto.
      * Ese bloque de texto es todo que lo que está contenido entre los dos
      * delimitadores: el de apertura y el de cierre.
      * El delimitador de apertura es la triple comilla ' """ ' que está a la
-     * derecha del igual.
+     * derecha de la sentencia return.
      * El delimitador de cierre es la triple comilla ' """ ' que está al final.
      * Todo es seguido por el punto y coma, porque es el final de una sentencia.
      * 
@@ -197,7 +194,7 @@ public class UserController {
      * que estamos definiendo es para ser usado solamente en el
      * elemento del DOM que tiene id='users', o sea la tabla.
      */
-    String resp = """
+    return """
           <style>
             #users {
               font-family: Arial, Helvetica, sans-serif;
@@ -225,25 +222,5 @@ public class UserController {
               <th>Email</th>
             </tr>
         """;
-    /**
-     * Ya terminé con la fila de los encabezados, y ahora tengo que
-     * generar el cuerpo de la tabla, una fila por cada registro.
-     * No puedo usar forEach() con una función lambda
-     * porque el scope de las variables no lo permite.
-     * Por eso uso el for mejorado, para recorrer el objeto iterable.
-     */
-    for (User user : iterable) {
-      resp += "<tr>"
-          + "<td>" + user.getId() + "</td>"
-          + "<td>" + user.getName() + "</td>"
-          + "<td>" + user.getEmail() + "</td>"
-          + "</tr>";
-    }
-    return resp + "</table>";
-  }
-
-  @GetMapping("")
-  public String hola() {
-    return "Hola";
   }
 }

@@ -1,8 +1,8 @@
 package tup.simple;
 
 /*
-Esta es la clase principal de la aplicación.
-Vemos que solo tiene las anotaciones de SpringBoot.
+Esta es la clase principal de la aplicación,
+tal como la genera el asistente.
 */
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
